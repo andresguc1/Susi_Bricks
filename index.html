@@ -1,442 +1,430 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SuSi Bricks</title>
     <style>
-      body {
-        margin: 0;
-        padding: 0;
-        background-color: #0d0d0d;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        font-family: "Arial", sans-serif;
-        color: white;
-        overflow: hidden;
-      }
-
-      .container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-      }
-
-      h1 {
-        margin: 20px 0;
-        font-size: 48px;
-        color: white;
-        text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
-        animation: glow 2s infinite alternate;
-      }
-
-      canvas {
-        border: 3px solid #ff1a1a;
-        background-color: #1b1b1b;
-        box-shadow: 0 0 20px #ff1a1a;
-        display: block;
-        margin: 0 auto;
-      }
-
-      .button {
-        margin: 10px;
-        padding: 10px 20px;
-        font-size: 18px;
-        color: white;
-        background-color: #ff1a1a;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-      }
-
-      .button:hover {
-        background-color: #ff4040;
-      }
-
-      #recordList {
-        list-style-type: none;
-        padding: 0;
-        margin: 20px 0;
-        text-align: left;
-      }
-
-      #recordList li {
-        margin: 10px 0;
-        font-size: 18px;
-      }
-
-      @keyframes glow {
-        from {
-          text-shadow: 0 0 10px rgba(255, 255, 255, 0.8),
-            0 0 20px rgba(255, 255, 255, 0.8);
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
-        to {
-          text-shadow: 0 0 20px rgba(255, 255, 255, 1),
-            0 0 30px rgba(255, 255, 255, 1);
-        }
-      }
 
-      @keyframes paddleHit {
-        0%,
-        100% {
-          background-color: #ff4040;
-          box-shadow: 0 0 20px rgba(255, 64, 64, 1);
+        body {
+            background-color: #0d0d0d;
+            font-family: 'Arial', sans-serif;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
         }
-        50% {
-          background-color: #ff1a1a;
-          box-shadow: 0 0 30px rgba(255, 26, 26, 1);
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
         }
-      }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: white;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+            animation: glow 2s infinite alternate;
+        }
+
+        p {
+            font-size: 1rem;
+            margin-bottom: 20px;
+            max-width: 600px;
+        }
+
+        canvas {
+            border: 3px solid #ff1a1a;
+            background-color: #1b1b1b;
+            box-shadow: 0 0 20px #ff1a1a;
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: white;
+            background-color: #ff1a1a;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #ff4040;
+        }
+
+        #recordList {
+            list-style-type: none;
+            padding: 0;
+            margin: 20px 0;
+            text-align: left;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        #recordList li {
+            margin: 10px 0;
+            font-size: 1rem;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.8);
+            }
+            to {
+                text-shadow: 0 0 20px rgba(255, 255, 255, 1), 0 0 30px rgba(255, 255, 255, 1);
+            }
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            p {
+                font-size: 0.9rem;
+            }
+
+            .button {
+                font-size: 0.9rem;
+                padding: 8px 16px;
+            }
+        }
     </style>
-  </head>
-  <body>
+</head>
+<body>
     <div class="container" id="presentationPage">
-      <h1>SuSi Bricks</h1>
-      <p>
-        Break all the bricks to win! Use left and right arrow keys to move the
-        paddle.
-      </p>
-      <button class="button" onclick="startGame()">Start Game</button>
-      <button class="button" onclick="showRecords()">View Records</button>
+        <h1>SuSi Bricks</h1>
+        <p>Break all the bricks to win! Use left and right arrow keys to move the paddle. On mobile, touch the left or right side of the screen to move.</p>
+        <button class="button" onclick="startGame()">Start Game</button>
+        <button class="button" onclick="showRecords()">View Records</button>
     </div>
 
-    <div class="container" id="gamePage" style="display: none">
-      <h1>SuSi Bricks</h1>
-      <canvas id="gameCanvas"></canvas>
+    <div class="container" id="gamePage" style="display: none;">
+        <h1>SuSi Bricks</h1>
+        <canvas id="gameCanvas"></canvas>
     </div>
 
-    <div class="container" id="recordsPage" style="display: none">
-      <h1>SuSi Bricks Records</h1>
-      <ul id="recordList"></ul>
-      <button class="button" onclick="showPresentationPage()">
-        Back to Main Menu
-      </button>
+    <div class="container" id="recordsPage" style="display: none;">
+        <h1>SuSi Bricks Records</h1>
+        <ul id="recordList"></ul>
+        <button class="button" onclick="showPresentationPage()">Back to Main Menu</button>
     </div>
 
     <script>
-      const canvas = document.getElementById("gameCanvas");
-      const ctx = canvas.getContext("2d");
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
 
-      const CANVAS_WIDTH = window.innerWidth * 0.8;
-      const CANVAS_HEIGHT = window.innerHeight * 0.7;
-      canvas.width = CANVAS_WIDTH;
-      canvas.height = CANVAS_HEIGHT;
+        let CANVAS_WIDTH = 800;
+        let CANVAS_HEIGHT = 600;
 
-      const BALL_RADIUS = 7;
-      const PADDLE_HEIGHT = 10;
-      const PADDLE_WIDTH = 100;
-      const BRICK_ROW_COUNT = 5;
-      const BRICK_COLUMN_COUNT = 8;
-      const BRICK_WIDTH = 75;
-      const BRICK_HEIGHT = 20;
-      const BRICK_PADDING = 10;
-      const BRICK_OFFSET_TOP = 30;
-      const BRICK_OFFSET_LEFT = 30;
+        const BALL_RADIUS = 7;
+        let PADDLE_HEIGHT = 10;
+        let PADDLE_WIDTH = 100;
+        const BRICK_ROW_COUNT = 5;
+        const BRICK_COLUMN_COUNT = 8;
+        let BRICK_WIDTH = 75;
+        let BRICK_HEIGHT = 20;
+        let BRICK_PADDING = 10;
+        let BRICK_OFFSET_TOP = 30;
+        let BRICK_OFFSET_LEFT = 30;
 
-      const BRICK_COLORS = [
-        { color: "#FF0000", points: 10 }, // Red
-        { color: "#FF7F00", points: 20 }, // Orange
-        { color: "#FFFF00", points: 30 }, // Yellow
-        { color: "#00FF00", points: 40 }, // Green
-        { color: "#0000FF", points: 50 }, // Blue
-        { color: "#4B0082", points: 60 }, // Indigo
-        { color: "#8B00FF", points: 70 }, // Violet
-      ];
+        const BRICK_COLORS = [
+            { color: "#FF0000", points: 10 }, // Red
+            { color: "#FF7F00", points: 20 }, // Orange
+            { color: "#FFFF00", points: 30 }, // Yellow
+            { color: "#00FF00", points: 40 }, // Green
+            { color: "#0000FF", points: 50 }, // Blue
+            { color: "#4B0082", points: 60 }, // Indigo
+            { color: "#8B00FF", points: 70 }  // Violet
+        ];
 
-      let ball = {
-        x: CANVAS_WIDTH / 2,
-        y: CANVAS_HEIGHT - 30,
-        dx: 5,
-        dy: -5,
-      };
+        let ball = {
+            x: CANVAS_WIDTH / 2,
+            y: CANVAS_HEIGHT - 30,
+            dx: 5,
+            dy: -5
+        };
 
-      let paddle = {
-        x: (CANVAS_WIDTH - PADDLE_WIDTH) / 2,
-        color: "#ffffff",
-      };
+        let paddle = {
+            x: (CANVAS_WIDTH - PADDLE_WIDTH) / 2,
+            color: "#ffffff"
+        };
 
-      let bricks = [];
-      let score = 0;
-      let hitCounter = 0;
-      let lives = 3;
-      let gameOver = false;
+        let bricks = [];
+        let score = 0;
+        let hitCounter = 0;
+        let lives = 3;
+        let gameOver = false;
 
-      let rightPressed = false;
-      let leftPressed = false;
+        let rightPressed = false;
+        let leftPressed = false;
 
-      function initializeBricks() {
-        for (let c = 0; c < BRICK_COLUMN_COUNT; c++) {
-          bricks[c] = [];
-          for (let r = 0; r < BRICK_ROW_COUNT; r++) {
-            let brickColor = BRICK_COLORS[(c + r) % BRICK_COLORS.length];
-            bricks[c][r] = {
-              x: c * (BRICK_WIDTH + BRICK_PADDING) + BRICK_OFFSET_LEFT,
-              y: r * (BRICK_HEIGHT + BRICK_PADDING) + BRICK_OFFSET_TOP,
-              status: 1,
-              color: brickColor.color,
-              points: brickColor.points,
-            };
-          }
-        }
-      }
+        function resizeGame() {
+            const container = document.getElementById('gamePage');
+            const containerWidth = container.clientWidth;
+            const containerHeight = container.clientHeight;
+            const aspectRatio = 4 / 3;
 
-      function drawBall() {
-        ctx.beginPath();
-        ctx.arc(ball.x, ball.y, BALL_RADIUS, 0, Math.PI * 2);
-        ctx.fillStyle = "#ffffff";
-        ctx.fill();
-        ctx.shadowColor = "#ffffff";
-        ctx.shadowBlur = 20;
-        ctx.closePath();
-      }
-
-      function drawPaddle() {
-        ctx.beginPath();
-        ctx.rect(
-          paddle.x,
-          CANVAS_HEIGHT - PADDLE_HEIGHT - 10,
-          PADDLE_WIDTH,
-          PADDLE_HEIGHT
-        );
-        ctx.fillStyle = paddle.color;
-        ctx.fill();
-        ctx.shadowColor = paddle.color;
-        ctx.shadowBlur = 20;
-        ctx.closePath();
-      }
-
-      function drawBricks() {
-        for (let c = 0; c < BRICK_COLUMN_COUNT; c++) {
-          for (let r = 0; r < BRICK_ROW_COUNT; r++) {
-            if (bricks[c][r].status === 1) {
-              let brick = bricks[c][r];
-              ctx.beginPath();
-              ctx.rect(brick.x, brick.y, BRICK_WIDTH, BRICK_HEIGHT);
-              ctx.fillStyle = brick.color;
-              ctx.fill();
-              ctx.closePath();
+            if (containerWidth / containerHeight > aspectRatio) {
+                CANVAS_HEIGHT = containerHeight - 100;
+                CANVAS_WIDTH = CANVAS_HEIGHT * aspectRatio;
+            } else {
+                CANVAS_WIDTH = containerWidth - 40;
+                CANVAS_HEIGHT = CANVAS_WIDTH / aspectRatio;
             }
-          }
+
+            canvas.width = CANVAS_WIDTH;
+            canvas.height = CANVAS_HEIGHT;
+
+            PADDLE_WIDTH = CANVAS_WIDTH * 0.15;
+            PADDLE_HEIGHT = CANVAS_HEIGHT * 0.02;
+            BRICK_WIDTH = (CANVAS_WIDTH - BRICK_OFFSET_LEFT * 2 - BRICK_PADDING * (BRICK_COLUMN_COUNT - 1)) / BRICK_COLUMN_COUNT;
+            BRICK_HEIGHT = CANVAS_HEIGHT * 0.04;
+            BRICK_PADDING = CANVAS_WIDTH * 0.01;
+            BRICK_OFFSET_TOP = CANVAS_HEIGHT * 0.1;
+            BRICK_OFFSET_LEFT = CANVAS_WIDTH * 0.05;
+
+            ball.x = CANVAS_WIDTH / 2;
+            ball.y = CANVAS_HEIGHT - 30;
+            paddle.x = (CANVAS_WIDTH - PADDLE_WIDTH) / 2;
+
+            initializeBricks();
         }
-      }
 
-      function drawScore() {
-        ctx.font = "16px Arial";
-        ctx.fillStyle = "#ffffff";
-        ctx.fillText("Score: " + score, 8, 20);
-      }
-
-      function drawLives() {
-        ctx.font = "16px Arial";
-        ctx.fillStyle = "#ffffff";
-        ctx.fillText("Lives: " + lives, CANVAS_WIDTH - 80, 20);
-      }
-
-      function drawGameOver() {
-        ctx.font = "48px Arial";
-        ctx.fillStyle = "#ffffff";
-        ctx.textAlign = "center";
-        ctx.fillText("Game Over", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
-        ctx.font = "24px Arial";
-        ctx.fillText(
-          "Final Score: " + score,
-          CANVAS_WIDTH / 2,
-          CANVAS_HEIGHT / 2 + 40
-        );
-        ctx.fillText(
-          "Click to return to main menu",
-          CANVAS_WIDTH / 2,
-          CANVAS_HEIGHT / 2 + 80
-        );
-      }
-
-      function collisionDetection() {
-        for (let c = 0; c < BRICK_COLUMN_COUNT; c++) {
-          for (let r = 0; r < BRICK_ROW_COUNT; r++) {
-            let brick = bricks[c][r];
-            if (brick.status === 1) {
-              if (
-                ball.x > brick.x &&
-                ball.x < brick.x + BRICK_WIDTH &&
-                ball.y > brick.y &&
-                ball.y < brick.y + BRICK_HEIGHT
-              ) {
-                ball.dy = -ball.dy;
-                brick.status = 0;
-                score += brick.points;
-                hitCounter++;
-                if (hitCounter >= 5) {
-                  shuffleBricks();
-                  hitCounter = 0;
+        function initializeBricks() {
+            for (let c = 0; c < BRICK_COLUMN_COUNT; c++) {
+                bricks[c] = [];
+                for (let r = 0; r < BRICK_ROW_COUNT; r++) {
+                    let brickColor = BRICK_COLORS[(c + r) % BRICK_COLORS.length];
+                    bricks[c][r] = {
+                        x: c * (BRICK_WIDTH + BRICK_PADDING) + BRICK_OFFSET_LEFT,
+                        y: r * (BRICK_HEIGHT + BRICK_PADDING) + BRICK_OFFSET_TOP,
+                        status: 1,
+                        color: brickColor.color,
+                        points: brickColor.points
+                    };
                 }
-              }
             }
-          }
         }
 
-        if (
-          ball.y + ball.dy > CANVAS_HEIGHT - PADDLE_HEIGHT - BALL_RADIUS - 10 &&
-          ball.x > paddle.x &&
-          ball.x < paddle.x + PADDLE_WIDTH
-        ) {
-          ball.dy = -ball.dy;
-          paddle.color = "#ff0000";
-          setTimeout(() => {
-            paddle.color = "#ffffff";
-          }, 200);
-
-          hitCounter++;
-          if (hitCounter >= 5) {
-            shuffleBricks();
-            hitCounter = 0;
-          }
+        function drawBall() {
+            ctx.beginPath();
+            ctx.arc(ball.x, ball.y, BALL_RADIUS, 0, Math.PI * 2);
+            ctx.fillStyle = "#ffffff";
+            ctx.fill();
+            ctx.shadowColor = "#ffffff";
+            ctx.shadowBlur = 20;
+            ctx.closePath();
         }
 
-        if (ball.y + ball.dy > CANVAS_HEIGHT - BALL_RADIUS) {
-          lives--;
-          if (lives <= 0) {
-            gameOver = true;
-            saveScore();
-          } else {
-            resetBall();
-          }
-        }
-      }
-
-      function resetBall() {
-        ball.x = CANVAS_WIDTH / 2;
-        ball.y = CANVAS_HEIGHT - 30;
-        ball.dx = 5;
-        ball.dy = -5;
-        paddle.x = (CANVAS_WIDTH - PADDLE_WIDTH) / 2;
-      }
-
-      function moveBall() {
-        if (
-          ball.x + ball.dx > CANVAS_WIDTH - BALL_RADIUS ||
-          ball.x + ball.dx < BALL_RADIUS
-        ) {
-          ball.dx = -ball.dx;
+        function drawPaddle() {
+            ctx.beginPath();
+            ctx.rect(paddle.x, CANVAS_HEIGHT - PADDLE_HEIGHT - 10, PADDLE_WIDTH, PADDLE_HEIGHT);
+            ctx.fillStyle = paddle.color;
+            ctx.fill();
+            ctx.shadowColor = paddle.color;
+            ctx.shadowBlur = 20;
+            ctx.closePath();
         }
 
-        if (ball.y + ball.dy < BALL_RADIUS) {
-          ball.dy = -ball.dy;
-        }
-
-        ball.x += ball.dx;
-        ball.y += ball.dy;
-      }
-
-      function movePaddle() {
-        if (rightPressed && paddle.x < CANVAS_WIDTH - PADDLE_WIDTH) {
-          paddle.x += 7;
-        } else if (leftPressed && paddle.x > 0) {
-          paddle.x -= 7;
-        }
-      }
-
-      function shuffleBricks() {
-        for (let c = 0; c < BRICK_COLUMN_COUNT; c++) {
-          for (let r = 0; r < BRICK_ROW_COUNT; r++) {
-            if (bricks[c][r].status === 1) {
-              let newColorIndex = Math.floor(
-                Math.random() * BRICK_COLORS.length
-              );
-              bricks[c][r].color = BRICK_COLORS[newColorIndex].color;
-              bricks[c][r].points = BRICK_COLORS[newColorIndex].points;
+        function drawBricks() {
+            for (let c = 0; c < BRICK_COLUMN_COUNT; c++) {
+                for (let r = 0; r < BRICK_ROW_COUNT; r++) {
+                    if (bricks[c][r].status === 1) {
+                        let brick = bricks[c][r];
+                        ctx.beginPath();
+                        ctx.rect(brick.x, brick.y, BRICK_WIDTH, BRICK_HEIGHT);
+                        ctx.fillStyle = brick.color;
+                        ctx.fill();
+                        ctx.closePath();
+                    }
+                }
             }
-          }
-        }
-      }
-
-      function draw() {
-        ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-
-        if (gameOver) {
-          drawGameOver();
-          return;
         }
 
-        drawBricks();
-        drawBall();
-        drawPaddle();
-        drawScore();
-        drawLives();
-
-        collisionDetection();
-        moveBall();
-        movePaddle();
-
-        requestAnimationFrame(draw);
-      }
-
-      function keyDownHandler(e) {
-        if (e.key === "Right" || e.key === "ArrowRight") {
-          rightPressed = true;
-        } else if (e.key === "Left" || e.key === "ArrowLeft") {
-          leftPressed = true;
+        function drawScore() {
+            ctx.font = "16px Arial";
+            ctx.fillStyle = "#ffffff";
+            ctx.fillText("Score: " + score, 8, 20);
         }
-      }
 
-      function keyUpHandler(e) {
-        if (e.key === "Right" || e.key === "ArrowRight") {
-          rightPressed = false;
-        } else if (e.key === "Left" || e.key === "ArrowLeft") {
-          leftPressed = false;
+        function drawLives() {
+            ctx.font = "16px Arial";
+            ctx.fillStyle = "#ffffff";
+            ctx.fillText("Lives: " + lives, CANVAS_WIDTH - 65, 20);
         }
-      }
 
-      function saveScore() {
-        let records = JSON.parse(localStorage.getItem("susiRecords")) || [];
-        records.push(score);
-        records.sort((a, b) => b - a);
-        records = records.slice(0, 5);
-        localStorage.setItem("susiRecords", JSON.stringify(records));
-      }
+        function draw() {
+            ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+            drawBricks();
+            drawBall();
+            drawPaddle();
+            drawScore();
+            drawLives();
 
-      function showRecords() {
-        let records = JSON.parse(localStorage.getItem("susiRecords")) || [];
-        let recordList = document.getElementById("recordList");
-        recordList.innerHTML = "";
-        records.forEach((record, index) => {
-          let li = document.createElement("li");
-          li.textContent = `#${index + 1}: ${record}`;
-          recordList.appendChild(li);
-        });
-        document.getElementById("presentationPage").style.display = "none";
-        document.getElementById("recordsPage").style.display = "flex";
-      }
+            if (ball.x + ball.dx > CANVAS_WIDTH - BALL_RADIUS || ball.x + ball.dx < BALL_RADIUS) {
+                ball.dx = -ball.dx;
+            }
+            if (ball.y + ball.dy < BALL_RADIUS) {
+                ball.dy = -ball.dy;
+            } else if (ball.y + ball.dy > CANVAS_HEIGHT - BALL_RADIUS) {
+                if (ball.x > paddle.x && ball.x < paddle.x + PADDLE_WIDTH) {
+                    ball.dy = -ball.dy;
+                } else {
+                    lives--;
+                    if (!lives) {
+                        gameOver = true;
+                    } else {
+                        ball.x = CANVAS_WIDTH / 2;
+                        ball.y = CANVAS_HEIGHT - 30;
+                        ball.dx = 5;
+                        ball.dy = -5;
+                        paddle.x = (CANVAS_WIDTH - PADDLE_WIDTH) / 2;
+                    }
+                }
+            }
 
-      function startGame() {
-        document.getElementById("presentationPage").style.display = "none";
-        document.getElementById("gamePage").style.display = "flex";
-        initializeBricks();
-        resetBall();
-        score = 0;
-        lives = 3;
-        gameOver = false;
-        draw();
-      }
+            if (rightPressed && paddle.x < CANVAS_WIDTH - PADDLE_WIDTH) {
+                paddle.x += 7;
+            } else if (leftPressed && paddle.x > 0) {
+                paddle.x -= 7;
+            }
 
-      function showPresentationPage() {
-        document.getElementById("recordsPage").style.display = "none";
-        document.getElementById("gamePage").style.display = "none";
-        document.getElementById("presentationPage").style.display = "flex";
-      }
+            for (let c = 0; c < BRICK_COLUMN_COUNT; c++) {
+                for (let r = 0; r < BRICK_ROW_COUNT; r++) {
+                    let brick = bricks[c][r];
+                    if (brick.status === 1) {
+                        if (
+                            ball.x > brick.x &&
+                            ball.x < brick.x + BRICK_WIDTH &&
+                            ball.y > brick.y &&
+                            ball.y < brick.y + BRICK_HEIGHT
+                        ) {
+                            ball.dy = -ball.dy;
+                            brick.status = 0;
+                            score += brick.points;
+                            hitCounter++;
 
-      document.addEventListener("keydown", keyDownHandler);
-      document.addEventListener("keyup", keyUpHandler);
-      canvas.addEventListener("click", function () {
-        if (gameOver) {
-          showPresentationPage();
+                            if (hitCounter === BRICK_ROW_COUNT * BRICK_COLUMN_COUNT) {
+                                alert("YOU WIN, CONGRATULATIONS!");
+                                document.getElementById('gamePage').style.display = 'none';
+                                document.getElementById('presentationPage').style.display = 'block';
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (gameOver) {
+                alert("GAME OVER");
+                document.getElementById('gamePage').style.display = 'none';
+                document.getElementById('presentationPage').style.display = 'block';
+                return;
+            }
+
+            ball.x += ball.dx;
+            ball.y += ball.dy;
+            requestAnimationFrame(draw);
         }
-      });
 
-      showPresentationPage();
+        function keyDownHandler(e) {
+            if (e.key === "Right" || e.key === "ArrowRight") {
+                rightPressed = true;
+            } else if (e.key === "Left" || e.key === "ArrowLeft") {
+                leftPressed = true;
+            }
+        }
+
+        function keyUpHandler(e) {
+            if (e.key === "Right" || e.key === "ArrowRight") {
+                rightPressed = false;
+            } else if (e.key === "Left" || e.key === "ArrowLeft") {
+                leftPressed = false;
+            }
+        }
+
+        function touchHandler(e) {
+            const touchX = e.touches[0].clientX;
+            const container = document.getElementById('gamePage');
+            const containerRect = container.getBoundingClientRect();
+
+            const relativeX = touchX - containerRect.left;
+            if (relativeX < CANVAS_WIDTH / 2) {
+                rightPressed = false;
+                leftPressed = true;
+            } else {
+                leftPressed = false;
+                rightPressed = true;
+            }
+        }
+
+        function startGame() {
+            document.getElementById('presentationPage').style.display = 'none';
+            document.getElementById('recordsPage').style.display = 'none';
+            document.getElementById('gamePage').style.display = 'block';
+            resizeGame();
+            draw();
+        }
+
+        function showRecords() {
+            document.getElementById('presentationPage').style.display = 'none';
+            document.getElementById('gamePage').style.display = 'none';
+            document.getElementById('recordsPage').style.display = 'block';
+
+            // Example records, you might want to fetch these from a database or local storage
+            const records = [
+                'Alice - 1200 points',
+                'Bob - 1100 points',
+                'Charlie - 900 points'
+            ];
+
+            const recordList = document.getElementById('recordList');
+            recordList.innerHTML = '';
+            records.forEach(record => {
+                const li = document.createElement('li');
+                li.textContent = record;
+                recordList.appendChild(li);
+            });
+        }
+
+        function showPresentationPage() {
+            document.getElementById('presentationPage').style.display = 'block';
+            document.getElementById('gamePage').style.display = 'none';
+            document.getElementById('recordsPage').style.display = 'none';
+        }
+
+        function saveScore() {
+            // Implement saving score logic here
+            console.log('Score saved');
+        }
+
+        document.addEventListener('keydown', keyDownHandler);
+        document.addEventListener('keyup', keyUpHandler);
+        document.addEventListener('touchstart', touchHandler);
+        document.addEventListener('touchmove', touchHandler);
+
+        window.addEventListener('resize', resizeGame);
     </script>
-  </body>
+</body>
 </html>
